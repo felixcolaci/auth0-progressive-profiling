@@ -1,5 +1,10 @@
 import adapter from '@sveltejs/adapter-auto';
 import preprocess from 'svelte-preprocess';
+import replace from '@rollup/plugin-replace';
+
+
+const netlify = process.env.NETLIFY === 'true';
+const base_path = netlify ? 'https://auth0-progressive-profiling.netlify.app' : 'http://localhost:9999';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -11,8 +16,16 @@ const config = {
 		adapter: adapter(),
 		prerender: {
 			default: false
-		}
+		},
+		vite: {
+		  plugins: [
+			replace({
+				'process.env.BASE_PATH': base_path
+			})
+		]
 	}
+	},
+	
 };
 
 export default config;

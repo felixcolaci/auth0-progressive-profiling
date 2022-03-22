@@ -2,16 +2,13 @@
     import { createEventDispatcher, onMount } from "svelte";
     import { writable } from "svelte/store";
     import type { Writable } from "svelte/store";
+      
+    import type { JsonBool } from "$lib/types/json";
+import { auth0Session, type Auth0Session } from "$lib/session.store";
+import { get } from "svelte/store";
   
-import type { JsonBool, JsonString } from "$lib/types/json";
-import { local } from "$lib/localStore";
-    
+    export let forms = []
   
-    export let name: string;
-  
-    const dispatch = createEventDispatcher();
-  
-    const store = name !== undefined ? local<JsonString>(name, {}) : writable({});
     const multi: Writable<JsonBool> = writable({});
   
     let multi_loc: JsonBool = {};
@@ -19,7 +16,6 @@ import { local } from "$lib/localStore";
   
     multi.subscribe(v => (multi_loc = v));
   
-    const onSubmit = (e: Event) => dispatch("submit", { e, store });
   
     function prev() {
       if (Object.keys(multi_loc)[current - 1]) {
@@ -57,6 +53,29 @@ import { local } from "$lib/localStore";
       }
     }
   
+    let continueForm: Auth0Session;
+    const onSubmit = async () => {
+      const result = {};
+      for(const form of forms) {
+        const formAsJson = JSON.parse(sessionStorage.getItem(form));
+        if (form === 'default') {
+          Object.assign(result, formAsJson);
+        } else {
+          result[form] = formAsJson
+        }
+      }
+      console.log(result)
+      auth0Session.dispatch(result)
+      auth0Session.subscribe(data => {
+        continueForm = data;
+        const form = document.getElementById('continueForm')
+        console.log(data)
+        if (form) {
+          form.submit()
+        }
+      })
+    }
+
     onMount(() => {
       multi.update(v => {
         v[Object.keys(multi_loc)[current]] = true;
@@ -64,10 +83,19 @@ import { local } from "$lib/localStore";
         return v;
       });
     });
+   
   </script>
+
+  {#if continueForm}
+    <form id="continueForm" action={continueForm.action} method="post">
+      <input type="hidden" name="continueToken" value={continueForm.sessionToken}>
+      <input type="hidden" name="state" value={continueForm.state}>
+    </form>
+  {/if}
+
   
   <form on:submit|preventDefault={onSubmit} {...$$restProps}>
-    <slot {store} {multi} />
+    <slot {multi} />
   
     <div class="controls">
       {#if Object.keys(multi_loc)[current - 1]}

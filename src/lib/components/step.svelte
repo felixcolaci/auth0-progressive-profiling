@@ -1,13 +1,16 @@
 <script lang="ts">
+import { local } from "$lib/localStore";
+import {camelCase} from 'lodash'
 import { toTitleCase } from "$lib/title";
 
-import type { JsonBool } from "$lib/types/json";
+import type { JsonBool, JsonString } from "$lib/types/json";
 
-  import type { Writable } from "svelte/store";
+  import { writable, type Writable } from "svelte/store";
 
 
   export let name: string;
   export let multi: Writable<JsonBool>;
+  const store = name !== undefined ? local<JsonString>(camelCase(name), {}) : writable({});
 
   multi.update(v => {
     v[name] = false;
@@ -28,7 +31,7 @@ import type { JsonBool } from "$lib/types/json";
       {:else}
       <h4>Basic Information</h4>
     {/if}
-    <slot />
+    <slot {store} />
   </div>
 {/if}
 <style lang="scss">

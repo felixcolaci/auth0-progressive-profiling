@@ -4,7 +4,6 @@ import type { Form } from "./types/form";
 import { FormElementType } from "./types/FormElementType";
 
 export const parseSchema = (schema: Form): Form[] => {
-    console.log(schema)
     if(!schema || (schema as unknown) == {} || !schema.properties) {
         return []
     }
