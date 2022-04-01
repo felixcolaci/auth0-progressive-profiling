@@ -41,6 +41,7 @@ export const handler: Handler = async (event, context) => {
     return corsResponse
   }
 
+
   const {state, requiredData, sessionToken} =  JSON.parse(event.body)
   if (!state || !requiredData || !sessionToken) {
     return handleError('provide state, token and payload!')

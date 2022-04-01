@@ -63,6 +63,7 @@
     let continueForm: Auth0Session;
     const onSubmit = async () => {
       const result = {};
+      console.log(forms)
       for(const form of forms) {
         const formAsJson = JSON.parse(sessionStorage.getItem(form));
         if (form === 'default') {
@@ -71,6 +72,7 @@
           result[form] = formAsJson
         }
       }
+      console.log(result)
       auth0Session.dispatch(result)
       auth0Session.subscribe(async (data) => {
         continueForm = data;

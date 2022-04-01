@@ -61,7 +61,7 @@
         <FormWrapper name={$schema.title} let:multi forms={formNames} theme={$schema?.theme}>
             {#each printableSchema as step}
         
-                <Step name={step.title != $schema.title ? step.title : ''} {multi} let:store>
+                <Step name={step.title} {multi} let:store>
                 {#each Object.entries(step.properties) as [key, element]}
                     <Input {store} type={element.type} name={key} placeholder={element.label} options={element.options}/>
                 {/each}

@@ -26,7 +26,7 @@ export const parseSchema = (schema: Form): Form[] => {
         }
     })
     if (!result.length) {
-        return [schema]
+        return [Object.assign(schema, {title: 'default'})]
     }
 
     return [baseForm, ...result]
