@@ -1,12 +1,11 @@
 <script lang="ts">
-    import { createEventDispatcher, onMount } from "svelte";
+    import { onMount } from "svelte";
     import { writable } from "svelte/store";
     import type { Writable } from "svelte/store";
       
     import type { JsonBool } from "$lib/types/json";
-import { auth0Session, type Auth0Session } from "$lib/session.store";
-import { get } from "svelte/store";
-import type { Theme } from "$lib/types/form";
+    import { auth0Session, type Auth0Session } from "$lib/session.store";
+    import type { Theme } from "$lib/types/form";
   
     export let forms = []
     export let theme: Theme;

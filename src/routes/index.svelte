@@ -7,14 +7,15 @@
     import FormWrapper from '$lib/components/form-wrapper.svelte';
     import Header from '$lib/components/header.svelte';
     import Input from '$lib/components/input.svelte';
-    import Step from '$lib/components/Step.svelte';
+    import Step from '$lib/components/step.svelte';
     import {schema} from '$lib/form-schema.store'
     import { parseSchema } from '$lib/parse-schema';
     import { auth0Session } from '$lib/session.store';
     import type { Form } from '$lib/types/form';
     import { validateAndParseInput } from '$lib/validate-input';
     import { onMount } from 'svelte';
-    import { camelCase } from 'lodash';
+    import lodash from 'lodash'
+    const { camelCase } = lodash;
     let err;
 
 
@@ -91,8 +92,6 @@
         border-radius: 10px;
         border: 1px solid rgba(0, 0, 0, 0.23);
         padding: 2em;
-        }
-    p {
-        color: var(--text-color);
     }
+   
 </style>

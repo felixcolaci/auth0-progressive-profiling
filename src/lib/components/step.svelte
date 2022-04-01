@@ -1,9 +1,10 @@
 <script lang="ts">
-import { local } from "$lib/localStore";
-import {camelCase} from 'lodash'
-import { toTitleCase } from "$lib/title";
+  import { local } from "$lib/localStore";
+  import lodash from 'lodash'
+  const { camelCase } = lodash;
+  import { toTitleCase } from "$lib/title";
 
-import type { JsonBool, JsonString } from "$lib/types/json";
+  import type { JsonBool, JsonString } from "$lib/types/json";
 
   import { writable, type Writable } from "svelte/store";
 
