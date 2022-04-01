@@ -28,6 +28,12 @@ export const parseSchema = (schema: Form): Form[] => {
     if (!result.length) {
         return [Object.assign(schema, {title: 'default'})]
     }
+    console.log(result)
 
-    return [baseForm, ...result]
+    if(Object.keys(baseForm.properties).length > 0) {
+        return [baseForm, ...result]
+
+    } else {
+        return [...result]
+    }
 }
