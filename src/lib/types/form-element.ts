@@ -7,7 +7,12 @@ export interface FormElement {
     value?: unknown;
     properties?: {
         [key: string]: FormElement
-    }
+    },
+    options?: SelectOption[]
  
 }
 
+export interface SelectOption {
+    value: string, 
+    label: string
+}

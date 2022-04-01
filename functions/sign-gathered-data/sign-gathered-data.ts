@@ -16,7 +16,7 @@ const handleCors = (event) => {
       return {
         statusCode: 200, // <-- Important!
         headers: corsHeaders,
-        body: 'This was not a POST request!'
+        body: 'Options Callback'
       };
    }
 }
@@ -47,15 +47,17 @@ export const handler: Handler = async (event, context) => {
   }
 
   try {
-    await jwtVerify(sessionToken, Buffer.from(TOKEN_SECRET), {
+    const { payload } = await jwtVerify(sessionToken, Buffer.from(TOKEN_SECRET), {
       algorithms: ['HS256']
     })
 
     const token = await new SignJWT({
         state,
-        requiredData
+        requiredData,
+
       })
-      .setProtectedHeader({alg: 'HS256'})
+      .setSubject(payload.sub)
+      .setProtectedHeader({alg: 'HS256', typ: 'JWT'})
       .setIssuedAt()
       .setIssuer('https://auth0-progressive-profiling.netflify.app')
       .setExpirationTime('60s')

@@ -6,16 +6,22 @@
     import type { JsonBool } from "$lib/types/json";
 import { auth0Session, type Auth0Session } from "$lib/session.store";
 import { get } from "svelte/store";
+import type { Theme } from "$lib/types/form";
   
     export let forms = []
-  
+    export let theme: Theme;
+
     const multi: Writable<JsonBool> = writable({});
   
     let multi_loc: JsonBool = {};
     let current = 0;
   
     multi.subscribe(v => (multi_loc = v));
-  
+    
+    let accentColor = "#635dff"
+    if(theme?.accentColor) {
+      accentColor = theme.accentColor;
+    }
   
     function prev() {
       if (Object.keys(multi_loc)[current - 1]) {
@@ -52,7 +58,9 @@ import { get } from "svelte/store";
         });
       }
     }
-  
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
     let continueForm: Auth0Session;
     const onSubmit = async () => {
       const result = {};
@@ -64,12 +72,11 @@ import { get } from "svelte/store";
           result[form] = formAsJson
         }
       }
-      console.log(result)
       auth0Session.dispatch(result)
-      auth0Session.subscribe(data => {
+      auth0Session.subscribe(async (data) => {
         continueForm = data;
         const form = document.getElementById('continueForm')
-        console.log(data)
+        await sleep(25)
         if (form) {
           form.submit()
         }
@@ -87,14 +94,14 @@ import { get } from "svelte/store";
   </script>
 
   {#if continueForm}
-    <form id="continueForm" action={continueForm.action} method="post">
-      <input type="hidden" name="continueToken" value={continueForm.sessionToken}>
+    <form id="continueForm" action={continueForm.action} method="post" class="hidden-form">
+      <input type="hidden" name="continueToken" value={continueForm.continueToken}>
       <input type="hidden" name="state" value={continueForm.state}>
     </form>
   {/if}
 
   
-  <form on:submit|preventDefault={onSubmit} {...$$restProps}>
+  <form on:submit|preventDefault={onSubmit} {...$$restProps} style="--accent-color={accentColor};">
     <slot {multi} />
   
     <div class="controls">
@@ -116,13 +123,14 @@ import { get } from "svelte/store";
   </form>
   
   <style lang="scss">
+    .hidden-form {
+      border: none !important;
+      padding: 0px !important;
+      margin: 0px !important;
+    }
     form {
       display: flex;
       flex-direction: column;
-      border-color: #c9cace;
-      border-radius: 10px;
-      border: 1px solid rgba(0, 0, 0, 0.23);
-      padding: 2em;
       & > div {
         margin-top: 1em;
       }
@@ -149,5 +157,6 @@ import { get } from "svelte/store";
     }
     .submit-btn {
       margin-left: 1em;
+      background-color: var(--accent-color);
     }
   </style>

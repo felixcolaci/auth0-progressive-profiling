@@ -30,7 +30,7 @@ const handleCors = (event) => {
       return {
         statusCode: 200, // <-- Important!
         headers: corsHeaders,
-        body: 'This was not a POST request!'
+        body: 'Options Callback'
       };
    }
 }

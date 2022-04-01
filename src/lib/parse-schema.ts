@@ -25,7 +25,6 @@ export const parseSchema = (schema: Form): Form[] => {
             baseForm.properties[key] = item
         }
     })
-    
     if (!result.length) {
         return [schema]
     }

@@ -33,28 +33,66 @@
 
     $: printableSchema = parseSchema($schema)
     $: formNames = printableSchema.map(form => camelCase(form.title))
+
+    let textColor = "#65676e"
+    let accentColor = "#635dff"
+    let backgroundColor = "#ffffff"
+    schema.subscribe(value => {
+        if (value?.theme?.textColor) {
+            textColor = value?.theme?.textColor
+        }
+        if (value?.theme?.accentColor) {
+            accentColor = value?.theme?.accentColor
+        }
+        if (value?.theme?.backgroundColor) {
+            backgroundColor = value?.theme?.backgroundColor
+        }
+    })
+
 </script>
+<body style="--text-color: {textColor}; --accent-color: {accentColor}; --background-color: {backgroundColor};">
+    <div class="content flex-shrink-0 container global-container" style="--text-color: {textColor}; --accent-color: {accentColor}; --background-color: {backgroundColor};">
 
-<Header {err} title={$schema.title}/>
+        <Header {err} title={$schema.title} subheading={$schema.subheading} logoUrl={$schema?.theme?.logoUrl}/>
+    
+    
+        {#if printableSchema.length}
+        <FormWrapper name={$schema.title} let:multi forms={formNames} theme={$schema?.theme}>
+            {#each printableSchema as step}
+        
+                <Step name={step.title != $schema.title ? step.title : ''} {multi} let:store>
+                {#each Object.entries(step.properties) as [key, element]}
+                    <Input {store} type={element.type} name={key} placeholder={element.label} options={element.options}/>
+                {/each}
+                </Step>
+            {/each}
+        </FormWrapper>
+        {/if}
+    </div>
+    
+</body>
 
-
-{#if printableSchema.length}
-<FormWrapper name={$schema.title} let:multi forms={formNames}>
-    {#each printableSchema as step}
-
-        <Step name={step.title} {multi} let:store>
-        {#each Object.entries(step.properties) as [key, element]}
-            <Input {store} type={element.type} name={key} placeholder={element.label}/>
-        {/each}
-        </Step>
-    {/each}
-</FormWrapper>
-{/if}
 
 
 
 <style lang="scss">
+    body {
+        background-color: var(--background-color);  
+        height: 100vh;
+        width: 100vw;
+        top: 0;
+        position: absolute;
+    }
+    .global-container {
+        width: 100%;
+        margin-top: 5em;
+        border-color: #c9cace;
+        background-color: #fff;
+        border-radius: 10px;
+        border: 1px solid rgba(0, 0, 0, 0.23);
+        padding: 2em;
+        }
     p {
-        color: #65676e;
+        color: var(--text-color);
     }
 </style>

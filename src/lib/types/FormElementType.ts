@@ -2,5 +2,6 @@
 export enum FormElementType {
     TEXT = "text",
     NUMBER = "number",
-    OBJECT = "object"
+    OBJECT = "object",
+    SELECT = "select"
 }
