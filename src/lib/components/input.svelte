@@ -15,25 +15,26 @@ import type { SelectOption } from "$lib/types/form-element";
   
     let value: string;
   
-    store.subscribe((v) => (value = v[name]));
+    store.subscribe((v) => {
+      if ($$restProps.type !== "select") {
+        value = v[name]
+      }
+    });
+    
+    $: store.update((v) => {
+      console.log(value)
+      v[name] = value;
+      return v;
+    })  
   
-    const onInput = (e: Event) => {
-      store.update(v => {
-        v[name] = value;
-  
-        return v;
-      });
-  
-      dispatch("input", e);
-    };
   </script>
   
   {#if $$restProps.type === "select"}
   <div class="form-group">
     <label for={name}>{$$restProps.placeholder}</label>
-    <select name={name} id={name} class="form-select" bind:value on:input={onInput}>
+    <select name={name} id={name} class="form-select" bind:value>
       {#each options as option}
-        <option value={option.value}>{option.label}</option>
+        <option value={option.value} selected={option.value === value}>{option.label}</option>
       {/each}
     </select>  
   </div>
@@ -41,7 +42,7 @@ import type { SelectOption } from "$lib/types/form-element";
   {:else}
     <div class="form-group">
       <label for={name}>{$$restProps.placeholder}</label>
-      <input id={name} {...$$restProps} class="form-control"  bind:value on:input={onInput}>
+      <input id={name} {...$$restProps} class="form-control"  bind:value>
     </div>
   {/if}
 
