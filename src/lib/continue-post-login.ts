@@ -8,7 +8,6 @@ export const continuePostLogin = async (
 	sessionData: Auth0Session
 ): Promise<{ state: string; continueToken: string }> => {
 	const issuer = getIssuer(sessionData.sessionToken);
-	console.log(issuer);
 	try {
 		var details = {
 			continueToken: token
@@ -28,9 +27,7 @@ export const continuePostLogin = async (
 			},
 			body: formBody.join('&')
 		});
-		console.log(rawResponse);
 		const response = await rawResponse.json();
-		console.log(response);
 		return response.token;
 	} catch (error) {
 		console.error(error);

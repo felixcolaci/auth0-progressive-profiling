@@ -12,7 +12,6 @@ export interface Auth0Session {
 
 const getIssuer = (sessionToken) => {
 	const payload = sessionToken.split('.')[1];
-	console.log(payload);
 	const decodedPayload = Base64.decode(payload);
 	const { iss } = JSON.parse(decodedPayload);
 	return iss;
