@@ -37,6 +37,7 @@
 	let textColor = '#65676e';
 	let accentColor = '#635dff';
 	let backgroundColor = '#ffffff';
+	let backgroundImage = '';
 	let title = '';
 	schema.subscribe((value) => {
 		if (value?.title) {
@@ -51,11 +52,14 @@
 		if (value?.theme?.backgroundColor) {
 			backgroundColor = value?.theme?.backgroundColor;
 		}
+		if (value?.theme?.backgroundImage) {
+			backgroundImage = `url(${value?.theme?.backgroundImage})`;
+		}
 	});
 </script>
 
 <body
-	style="--text-color: {textColor}; --accent-color: {accentColor}; --background-color: {backgroundColor};"
+	style="--text-color: {textColor}; --accent-color: {accentColor}; --background-color: {backgroundColor}; --background-image: {backgroundImage};"
 >
 	<div
 		class="content flex-shrink-0 container global-container"
@@ -90,6 +94,10 @@
 		width: 100vw;
 		top: 0;
 		position: absolute;
+		background-image: var(--background-image);
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: cover;
 	}
 	.global-container {
 		width: 100%;
