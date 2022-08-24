@@ -1,27 +1,40 @@
 <script lang="ts">
 	import type { SelectOption } from '$lib/types/form-element';
 
-	import type { JsonString } from '$lib/types/json';
+	import type { JsonBool, JsonString } from '$lib/types/json';
 
 	import { createEventDispatcher } from 'svelte';
 	import type { Writable } from 'svelte/store';
 
-	export let store: Writable<JsonString>;
+	export let store: Writable<JsonString | JsonBool>;
 	export let name: string;
 	export let options: SelectOption[];
 
 	const dispatch = createEventDispatcher();
 
-	let value: string;
+	let value: string | boolean;
+	let bool: boolean = false;
 
 	store.subscribe((v) => {
-		if ($$restProps.type !== 'select') {
-			value = v[name];
+		console.log(v);
+		switch ($$restProps.type) {
+			case 'checkbox':
+				bool = v[name] as boolean;
+				break;
+			case 'select':
+				break;
+			default:
+				value = v[name];
+				break;
 		}
 	});
 
 	$: store.update((v) => {
-		v[name] = value;
+		if (!value) {
+			v[name] = bool;
+		} else {
+			v[name] = value;
+		}
 		return v;
 	});
 </script>
@@ -34,6 +47,13 @@
 				<option value={option.value} selected={option.value === value}>{option.label}</option>
 			{/each}
 		</select>
+	</div>
+{:else if $$restProps.type === 'checkbox'}
+	<div class="form-check">
+		<input class="form-check-input" type="checkbox" id={name} bind:checked={bool} />
+		<label class="form-check-label" for={name}>
+			{$$restProps.placeholder}
+		</label>
 	</div>
 {:else}
 	<div class="form-group">
