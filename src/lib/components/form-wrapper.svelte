@@ -77,6 +77,8 @@
 			const form = document.getElementById('continueForm');
 			await sleep(25);
 			if (form) {
+				localStorage.clear();
+				sessionStorage.clear();
 				form.submit();
 			}
 		});
