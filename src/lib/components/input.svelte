@@ -16,7 +16,6 @@
 	let bool: boolean = false;
 
 	store.subscribe((v) => {
-		console.log(v);
 		switch ($$restProps.type) {
 			case 'checkbox':
 				bool = v[name] as boolean;
@@ -24,7 +23,11 @@
 			case 'select':
 				break;
 			default:
-				value = v[name];
+				if (!v[name]) {
+					value = '';
+				} else {
+					value = v[name];
+				}
 				break;
 		}
 	});
@@ -63,7 +66,8 @@
 {/if}
 
 <style lang="scss">
-	.form-group {
+	.form-group,
+	.form-check {
 		margin-top: 1em;
 	}
 	label {
