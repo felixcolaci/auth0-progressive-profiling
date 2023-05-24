@@ -9,11 +9,11 @@
 
 {#if !err}
 	{#if !logoUrl}
-		<h1>{toTitleCase(title)}</h1>
+		<h1>{title}</h1>
 	{:else}
 		<div class="d-flex align-items-center text-dark text-decoration-none header">
 			<img width="80" height="80" alt="logo" src={logoUrl} class="bi me-2" />
-			<h1 class="fs-4">{toTitleCase(title)}</h1>
+			<h1 class="fs-4">{title}</h1>
 		</div>
 	{/if}
 
